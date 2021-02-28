@@ -1,4 +1,4 @@
-# inst_settings_in_image
+# inst_settings_in_image.py
 This is a collection of methods to query lab instrument settings and save them in a PNG image file. The file can be used later to restore all the lab instrument settings.
 The idea is to embed all connected instrument settings in an oscilloscope screen capture. It is done using a JSON database which is also human readable. The instrument settings are a list of scpi commands which uniquely define the instrument state. In order to make the list of scpi commands as short as possible, a pthyon class for each instrument is needed that implements get_unique_scpi(). Presently I have 3 instruments completed (they are separate repositories). Oscilloscope settings are next on my list to add... I have a generic approach of defining dictionaries for the channel, measurement and triggering setup.
 
