@@ -73,9 +73,52 @@ def restore_instrument_settings(image_filename="",instrument_dict=[]):
                     for scpi_cmd in unique_scpi:
                         instrument.write(scpi_cmd)
 
+def add_to_pnginfo(image_filename="", data_name="", data_dict={})
+    targetImage = PngImageFile(image_filename)
+    metadata = PngInfo()
+    metadata.add_text(data_name, json.dumps(data_dict))
+    targetImage.save(image_filename, pnginfo=metadata)
+
 #instrum_dict = get_instrument_dict()
 #print(instrum_dict)
 #insert_instrument_settings(image_filename="C:/filename.png",instrument_dict=instrum_dict)
 #restore_instrument_settings(image_filename="C:/filename.png",instrument_dict=instrum_dict)
 #remove_all_pnginfo(image_filename="C:/filename.png")
 #print_pnginfo(image_filename="C:/filename.png")
+
+# Oscilloscope data example
+analog_channels = {
+    1: ('COOL_V1',      0.2,   -10,  '20MHz', 'DC1M'),
+    2: ('NASTY_V2',     0.5,  -4.9,  '20MHz', 'DC1M'),
+    3: ('FAVORITE_V3',    2,   -10,  '20MHz', 'DC1M'),
+    4: ('OLD_V4',         2,    -8,  '20MHz', 'DC1M'),
+    5: ('LITTLE_I1',      2,   3.0,  '20MHz', 'DC'),
+    6: ('BIGGER_I2',      2,   1.0,  '20MHz', 'DC'),
+    7: ('IMPORTANT_I3',   2,  -0.5,  '20MHz', 'DC'),
+    8: ('ARB_I4',       0.5,  -1.5,  '20MHz', 'DC')
+}
+
+digital_channels = {
+    0: 'cool_name_1',
+    1: 'even_better_name_2',
+    2: 'the_best_name_3',
+    3: 'worst_name_4'
+}
+
+measurement_channels = { 1:  ('C1', 'max'),
+                         2:  ('C1', 'level@x'),
+                         3:  ('C2', 'max'),
+                         4:  ('C2', 'level@x'),
+                         5:  ('C3', 'max'),
+                         6:  ('C3', 'level@x'),
+                         7:  ('C5', 'max'),
+                         8:  ('C6', 'max'),
+                         9:  ('C7', 'max'),
+                         10: ('C8', 'max'),
+                         11: ('C8', 'level@x'),
+                         12: ('C8', 'level@x') }
+
+
+#add_to_pnginfo(image_filename="C:/filename.png", data_name="analog_channels",      data_dict=analog_channels)
+#add_to_pnginfo(image_filename="C:/filename.png", data_name="digital_channels",     data_dict=digital_channels)
+#add_to_pnginfo(image_filename="C:/filename.png", data_name="measurement_channels", data_dict=measurement_channels)
