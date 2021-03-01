@@ -98,6 +98,7 @@ def get_dict_from_pnginfo(image_filename="", dict_name="")
 #print_pnginfo(image_filename="C:/filename.png")
 
 # Oscilloscope data example
+# - label, ver_scale, ver_offset (voltage value not divisions, with center line as 0V), bw, coupling
 analog_channels = {
     1: ('COOL_V1',      0.2,   -10,  '20MHz', 'DC1M'),
     2: ('NASTY_V2',     0.5,  -4.9,  '20MHz', 'DC1M'),
@@ -109,13 +110,14 @@ analog_channels = {
     8: ('ARB_I4',       0.5,  -1.5,  '20MHz', 'DC')
 }
 
+# - label
 digital_channels = {
     0: 'cool_name_1',
     1: 'even_better_name_2',
     2: 'the_best_name_3',
     3: 'worst_name_4'
 }
-
+# - source channel, measurement type
 measurement_channels = { 1:  ('C1', 'max'),
                          2:  ('C1', 'level@x'),
                          3:  ('C2', 'max'),
