@@ -2,6 +2,7 @@ import pyvisa
 from hmp4040              import hmp4040
 from keithley_2308        import keithley_2308
 from tektronics_afg3000   import tektronics_afg3000
+from lecroy               import lecroy
 import json
 from PIL.PngImagePlugin   import PngImageFile, PngInfo
 import time
@@ -79,6 +80,16 @@ def add_to_pnginfo(image_filename="", data_name="", data_dict={})
     metadata.add_text(data_name, json.dumps(data_dict))
     targetImage.save(image_filename, pnginfo=metadata)
 
+def get_dict_from_pnginfo(image_filename="", dict_name="")
+    dict_to_return = {}
+    targetImage = PngImageFile(image_filename)
+    all_settings_dict = targetImage.text
+    for settings_key in all_settings_dict:
+        if (settings_key == dict_name):
+	    dict_to_return = json.loads(all_settings_dict[settings_key])
+    return dict_to_return
+
+
 #instrum_dict = get_instrument_dict()
 #print(instrum_dict)
 #insert_instrument_settings(image_filename="C:/filename.png",instrument_dict=instrum_dict)
@@ -118,7 +129,11 @@ measurement_channels = { 1:  ('C1', 'max'),
                          11: ('C8', 'level@x'),
                          12: ('C8', 'level@x') }
 
-
 #add_to_pnginfo(image_filename="C:/filename.png", data_name="analog_channels",      data_dict=analog_channels)
 #add_to_pnginfo(image_filename="C:/filename.png", data_name="digital_channels",     data_dict=digital_channels)
 #add_to_pnginfo(image_filename="C:/filename.png", data_name="measurement_channels", data_dict=measurement_channels)
+#restore_analog_channels  = get_dict_from_pnginfo(image_filename="C:/filename.png",dict_name="analog_channels")
+#restore_digital_channels = get_dict_from_pnginfo(image_filename="C:/filename.png",dict_name="digital_channels")
+#lecroy.channel_setup(analog_ch_dict=restore_analog_channels, digital_ch_dict=restore_digital_channels)
+#restore_measurement_channels = get_dict_from_pnginfo(image_filename="C:/filename.png",dict_name="measurement_channels")
+#lecroy.measurement_setup(meas_dict=restore_measurement_channels)
