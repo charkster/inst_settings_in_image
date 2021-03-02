@@ -6,6 +6,7 @@ from lecroy               import lecroy
 import json
 from PIL.PngImagePlugin   import PngImageFile, PngInfo
 import time
+import smbus
 
 def remove_all_pnginfo(image_filename=""):
     targetImage = PngImageFile(image_filename)
@@ -89,6 +90,17 @@ def get_dict_from_pnginfo(image_filename="", dict_name="")
 	    dict_to_return = json.loads(all_settings_dict[settings_key])
     return dict_to_return
 
+def get_i2c_values(slave_address=0x40):
+    bus.SMBus(1)
+    result_list = []
+    for address in range(0,256):
+        result_list.append(bus.read_byte_data(slave_address, address))
+    return result_list
+
+def restore_i2c_values(slave_address=0x40, list_of_values=[]):
+    bus.SMBus(1)
+    for address in range(0,256):
+        bus.write_byte_data(slave_address, address, list_of_values[address])
 
 #instrum_dict = get_instrument_dict()
 #print(instrum_dict)
@@ -139,3 +151,11 @@ measurement_channels = { 1:  ('C1', 'max'),
 #lecroy.channel_setup(analog_ch_dict=restore_analog_channels, digital_ch_dict=restore_digital_channels)
 #restore_measurement_channels = get_dict_from_pnginfo(image_filename="C:/filename.png",dict_name="measurement_channels")
 #lecroy.measurement_setup(meas_dict=restore_measurement_channels)
+
+# DUT state
+#dut_1_list = get_i2c_values(slave_address=0xB3)
+#dut_2_list = get_i2c_values(slave_address=0xB4)
+#add_to_pnginfo(image_filename="C:/filename.png", data_name="dut_i2c_0xB3", data_dict=dut_1_list)
+#add_to_pnginfo(image_filename="C:/filename.png", data_name="dut_i2c_0xB4", data_dict=dut_2_list)
+#restore_i2c_values(slave_address=0xB3, list_of_values=dut_1_list)
+#restore_i2c_values(slave_address=0xB4, list_of_values=dut_2_list)
