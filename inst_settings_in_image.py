@@ -91,14 +91,14 @@ def get_dict_from_pnginfo(image_filename="", dict_name="")
     return dict_to_return
 
 def get_i2c_values(slave_address=0x40):
-    bus.SMBus(1)
+    bus = smbus.SMBus(1)
     result_list = []
     for address in range(0,256):
         result_list.append(bus.read_byte_data(slave_address, address))
     return result_list
 
 def restore_i2c_values(slave_address=0x40, list_of_values=[]):
-    bus.SMBus(1)
+    bus = smbus.SMBus(1)
     for address in range(0,256):
         bus.write_byte_data(slave_address, address, list_of_values[address])
 
