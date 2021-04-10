@@ -1,6 +1,7 @@
 import pyvisa
 from hmp4040              import hmp4040
 from keithley_2308        import keithley_2308
+from keithley_2460        import keithley_2460
 from tektronics_afg3000   import tektronics_afg3000
 from lecroy               import lecroy
 import json
@@ -49,6 +50,10 @@ def insert_instrument_settings(image_filename="",instrument_dict=[]):
             k2308 = keithley_2308(pyvisa_instr=rm.open_resource(instrument_dict[key]))
             k2308_unique_scpi = k2308.get_unique_scpi_list()
             metadata.add_text("k2308_unique_scpi", json.dumps(k2308_unique_scpi))
+	if (key.startswith("KEITHLEY INSTRUMENTS INC.,MODEL 2460")):
+            k2460 = keithley_2460(pyvisa_instr=rm.open_resource(instrument_dict[key]))
+            k2460_unique_scpi = k2460.get_unique_scpi_list()
+            metadata.add_text("k2460_unique_scpi", json.dumps(k2460_unique_scpi))
         if (key.startswith("TEKTRONIX,AFG3102")):
             tek_afg3000 = tektronics_afg3000(pyvisa_instr=rm.open_resource(instrument_dict[key]))
             tek_afg3000_unique_scpi = tek_afg3000.get_unique_scpi_list()
