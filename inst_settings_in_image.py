@@ -66,6 +66,7 @@ def restore_instrument_settings(image_filename="",instrument_dict=[]):
     all_settings_dict = targetImage.text
     rm = pyvisa.ResourceManager()
     supported_inst_dict = {'k2308_unique_scpi'       : "KEITHLEY INSTRUMENTS INC.,MODEL 2308",
+			   'k2460_unique_scpi'       : "KEITHLEY INSTRUMENTS INC.,MODEL 2460",
                            'hmp4040_unique_scpi'     : "HAMEG,HMP4040",
                            'tek_afg3000_unique_scpi' : "TEKTRONIX,AFG3102" }
 
