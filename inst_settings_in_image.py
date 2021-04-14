@@ -27,13 +27,17 @@ def get_instrument_dict():
     rm = pyvisa.ResourceManager()
     # rm = pyvisa.ResourceManager('@py')
     for inst in rm.list_resources():
-        handle = rm.open_resource(inst)
-        try:
-            instrument_idn = handle.query("*IDN?")
-        except:
-            pass
+	try:
+            handle = rm.open_resource(inst)
+	except:
+	    pass
         else:
-            instrument_dict[instrument_idn] = inst
+	    try:
+                instrument_idn = handle.query("*IDN?")
+            except:
+                pass
+            else:
+                instrument_dict[instrument_idn] = inst
     return instrument_dict
 
 def insert_instrument_settings(image_filename="",instrument_dict=[]):
