@@ -3,6 +3,8 @@ from hmp4040              import hmp4040
 from keithley_2308        import keithley_2308
 from keithley_2460        import keithley_2460
 from tektronics_afg3000   import tektronics_afg3000
+from kikusui_plz4w        import kikusui_plz4w
+from keysight_33250a      import keysight_33250a
 from lecroy               import lecroy
 import json
 from PIL.PngImagePlugin   import PngImageFile, PngInfo
@@ -62,17 +64,26 @@ def insert_instrument_settings(image_filename="",instrument_dict=[]):
             tek_afg3000 = tektronics_afg3000(pyvisa_instr=rm.open_resource(instrument_dict[key]))
             tek_afg3000_unique_scpi = tek_afg3000.get_unique_scpi_list()
             metadata.add_text("tek_afg3000_unique_scpi", json.dumps(tek_afg3000_unique_scpi))
-	
-	targetImage.save(image_filename, pnginfo=metadata)
+	if (key.startswith("KIKUSUI,PLZ164WA,")):
+            plz4w = kikusui_plz4w(pyvisa_instr=rm.open_resource(instrument_dict[key]))
+            plz4w_unique_scpi = plz4w.get_unique_scpi_list()
+            metadata.add_text("plz4w_unique_scpi", json.dumps(plz4w_unique_scpi))
+	if (key.startswith("Agilent Technologies,33250A")):
+            key_33250a = keysight_33250a(pyvisa_instr=rm.open_resource(instrument_dict[key]))
+            key_33250a_unique_scpi = key_33250a.get_unique_scpi_list()
+            metadata.add_text("key_33250a_unique_scpi", json.dumps(key_33250a_unique_scpi))
+
 
 def restore_instrument_settings(image_filename="",instrument_dict=[]):
     targetImage = PngImageFile(image_filename)
     all_settings_dict = targetImage.text
     rm = pyvisa.ResourceManager()
-    supported_inst_dict = {'k2308_unique_scpi'       : "KEITHLEY INSTRUMENTS INC.,MODEL 2308",
-			   'k2460_unique_scpi'       : "KEITHLEY INSTRUMENTS INC.,MODEL 2460",
-                           'hmp4040_unique_scpi'     : "HAMEG,HMP4040",
-                           'tek_afg3000_unique_scpi' : "TEKTRONIX,AFG3102" }
+    supported_inst_dict = { 'k2308_unique_scpi'       : "KEITHLEY INSTRUMENTS INC.,MODEL 2308",
+			    'k2460_unique_scpi'       : "KEITHLEY INSTRUMENTS INC.,MODEL 2460",
+                            'hmp4040_unique_scpi'     : "HAMEG,HMP4040",
+                            'tek_afg3000_unique_scpi' : "TEKTRONIX,AFG3102",
+			    'plz4w_unique_scpi'       : "KIKUSUI,PLZ164WA,",
+			    'key_33250a_unique_scpi'  : "Agilent Technologies,33250A" }
 
     for settings_key in all_settings_dict:                                         # loop thru all settings inside image
         if (settings_key in supported_inst_dict):                                  # only process supported instruments
