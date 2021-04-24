@@ -42,41 +42,74 @@ def get_instrument_dict():
                 instrument_dict[instrument_idn] = inst
     return instrument_dict
 
-def insert_instrument_settings(image_filename="",instrument_dict=[]):
-    targetImage = PngImageFile(image_filename)
-    metadata = PngInfo()
+def insert_instrument_settings(filename="",instrument_dict=[]):
+    isimage = False
+    if (filename.endswith('PNG') or filename.endswidth('png')):
+	targetImage = PngImageFile(filename)
+	metadata = PngInfo()
+	isimage = True
+    else:
+	open('instrument_settings.json', 'w') as outfile:
+	settings_dict = {}
+    
     rm = pyvisa.ResourceManager()
 
     for key in instrument_dict:
         if (key.startswith("HAMEG,HMP4040")):
             hmp4040 = hmp4040_power_supply(pyvisa_instr=rm.open_resource(instrument_dict[key]))
             hmp4040_unique_scpi = hmp4040.get_unique_scpi_list()
-            metadata.add_text("hmp4040_unique_scpi", json.dumps(hmp4040_unique_scpi))
+            if (isimage):
+		metadata.add_text("hmp4040_unique_scpi", json.dumps(hmp4040_unique_scpi))
+            else:
+		settings_dict['hmp4040_unique_scpi'] = hmp4040_unique_scpi
         if (key.startswith("KEITHLEY INSTRUMENTS INC.,MODEL 2308")):
             k2308 = keithley_2308(pyvisa_instr=rm.open_resource(instrument_dict[key]))
             k2308_unique_scpi = k2308.get_unique_scpi_list()
-            metadata.add_text("k2308_unique_scpi", json.dumps(k2308_unique_scpi))
+            if (isimage):
+		metadata.add_text("k2308_unique_scpi", json.dumps(k2803_unique_scpi))
+            else:
+		settings_dict['k2308_unique_scpi'] = k2308_unique_scpi
 	if (key.startswith("KEITHLEY INSTRUMENTS INC.,MODEL 2460")):
             k2460 = keithley_2460(pyvisa_instr=rm.open_resource(instrument_dict[key]))
             k2460_unique_scpi = k2460.get_unique_scpi_list()
-            metadata.add_text("k2460_unique_scpi", json.dumps(k2460_unique_scpi))
+            if (isimage):
+		metadata.add_text("k2460_unique_scpi", json.dumps(k2460_unique_scpi))
+            else:
+		settings_dict['k2460_unique_scpi'] = k2460_unique_scpi
         if (key.startswith("TEKTRONIX,AFG3102")):
             tek_afg3000 = tektronics_afg3000(pyvisa_instr=rm.open_resource(instrument_dict[key]))
             tek_afg3000_unique_scpi = tek_afg3000.get_unique_scpi_list()
-            metadata.add_text("tek_afg3000_unique_scpi", json.dumps(tek_afg3000_unique_scpi))
+            if (isimage):
+		metadata.add_text("tek_afg3000_unique_scpi", json.dumps(tek_afg3000_unique_scpi))
+            else:
+		settings_dict['tek_afg3000_unique_scpi'] = tek_afg3000_unique_scpi
 	if (key.startswith("KIKUSUI,PLZ164WA,")):
             plz4w = kikusui_plz4w(pyvisa_instr=rm.open_resource(instrument_dict[key]))
             plz4w_unique_scpi = plz4w.get_unique_scpi_list()
-            metadata.add_text("plz4w_unique_scpi", json.dumps(plz4w_unique_scpi))
+            if (isimage):
+		metadata.add_text("plzw4_unique_scpi", json.dumps(plz4w_unique_scpi))
+            else:
+		settings_dict['plz4w_unique_scpi'] = plz4w_unique_scpi
 	if (key.startswith("Agilent Technologies,33250A")):
             key_33250a = keysight_33250a(pyvisa_instr=rm.open_resource(instrument_dict[key]))
             key_33250a_unique_scpi = key_33250a.get_unique_scpi_list()
-            metadata.add_text("key_33250a_unique_scpi", json.dumps(key_33250a_unique_scpi))
+            if (isimage):
+		metadata.add_text("key_33250a_unique_scpi", json.dumps(key_33250a_unique_scpi))
+            else:
+		settings_dict['key_33250a_unique_scpi'] = key_33250a_unique_scpi
+        if (not isimage):
+            json.dump(settings_dict, outfile)
+            outfile.close()
 
+def restore_instrument_settings(filename="",instrument_dict=[]):
+    isimage = False
+    if (filename.endswith('PNG') or filename.endswidth('png')):
+	targetImage = PngImageFile(filename)
+	all_settings_dict = targetImage.text
+    else:
+	infile = open('filename',)
+	all_settings_dict = json.load(infile)
 
-def restore_instrument_settings(image_filename="",instrument_dict=[]):
-    targetImage = PngImageFile(image_filename)
-    all_settings_dict = targetImage.text
     rm = pyvisa.ResourceManager()
     supported_inst_dict = { 'k2308_unique_scpi'       : "KEITHLEY INSTRUMENTS INC.,MODEL 2308",
 			    'k2460_unique_scpi'       : "KEITHLEY INSTRUMENTS INC.,MODEL 2460",
