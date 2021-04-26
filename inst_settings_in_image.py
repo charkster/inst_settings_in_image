@@ -118,19 +118,18 @@ def restore_instrument_settings(filename="", instrument_dict=[]):
         all_settings_dict = json.load(infile)
 
     rm = pyvisa.ResourceManager()
-    supported_inst_dict = {'k2308_unique_scpi': "KEITHLEY INSTRUMENTS INC.,MODEL 2308",
-                           'k2460_unique_scpi': "KEITHLEY INSTRUMENTS INC.,MODEL 2460",
-                           'hmp4040_unique_scpi': "HAMEG,HMP4040",
+    supported_inst_dict = {'k2308_unique_scpi':       "KEITHLEY INSTRUMENTS INC.,MODEL 2308",
+                           'k2460_unique_scpi':       "KEITHLEY INSTRUMENTS INC.,MODEL 2460",
+                           'hmp4040_unique_scpi':     "HAMEG,HMP4040",
                            'tek_afg3000_unique_scpi': "TEKTRONIX,AFG3102",
-                           'plz4w_unique_scpi': "KIKUSUI,PLZ164WA,",
-                           'key_33250a_unique_scpi': "Agilent Technologies,33250A"}
+                           'plz4w_unique_scpi':       "KIKUSUI,PLZ164WA,",
+                           'key_33250a_unique_scpi':  "Agilent Technologies,33250A"}
 
     for settings_key in all_settings_dict:  # loop thru all settings inside image
         if (settings_key in supported_inst_dict):  # only process supported instruments
             unique_scpi = json.loads(all_settings_dict[settings_key])  # get the unique scpi state of the instrument
             for instrument_key in instrument_dict:  # loop thru all connected instruments
-                if (instrument_key.startswith(supported_inst_dict[
-                                                  settings_key])):  # only process connected instruments that match supported instruments
+                if (instrument_key.startswith(supported_inst_dict[settings_key])):  # only process connected instruments that match supported instruments
                     instrument = rm.open_resource(instrument_dict[instrument_key])
                     instrument.write('*RST')
                     time.sleep(2)
