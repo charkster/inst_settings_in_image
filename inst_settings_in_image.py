@@ -110,7 +110,7 @@ def insert_instrument_settings(filename="", instrument_dict=[]):
 
 def restore_instrument_settings(filename="", instrument_dict=[]):
     isimage = False
-    if (filename.endswith('PNG') or filename.endswidth('png')):
+    if (filename.endswith('PNG') or filename.endswith('png')):
         targetImage = PngImageFile(filename)
         all_settings_dict = targetImage.text
     else:
@@ -172,7 +172,7 @@ def restore_i2c_values(slave_address=0x40, list_of_values=[]):
 instrum_dict = get_instrument_dict()
 print(instrum_dict)
 insert_instrument_settings(filename="C:/temp/test_inst_settings.json",instrument_dict=instrum_dict) # write to file
-# restore_instrument_settings(image_filename="C:/temp/test_inst_settings.json",instrument_dict=instrum_dict)
+# restore_instrument_settings(filename="C:/temp/test_inst_settings.json",instrument_dict=instrum_dict)
 # remove_all_pnginfo(image_filename="C:/filename.png")
 # print_pnginfo(image_filename="C:/filename.png")
 
