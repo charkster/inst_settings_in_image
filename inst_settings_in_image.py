@@ -127,7 +127,10 @@ def restore_instrument_settings(filename="", instrument_dict=[]):
 
     for settings_key in all_settings_dict:  # loop thru all settings inside image
         if (settings_key in supported_inst_dict):  # only process supported instruments
-            unique_scpi = json.loads(all_settings_dict[settings_key])  # get the unique scpi state of the instrument
+            if (isimage):
+                unique_scpi = json.loads(all_settings_dict[settings_key])  # json method needed
+            else:
+                unique_scpi = all_settings_dict[settings_key] # json method not needed
             for instrument_key in instrument_dict:  # loop thru all connected instruments
                 if (instrument_key.startswith(supported_inst_dict[settings_key])):  # only process connected instruments that match supported instruments
                     instrument = rm.open_resource(instrument_dict[instrument_key])
