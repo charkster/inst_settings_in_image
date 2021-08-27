@@ -11,12 +11,10 @@ from PIL.PngImagePlugin   import PngImageFile, PngInfo
 import time
 #import smbus
 
-
 def remove_all_pnginfo(image_filename=""):
     targetImage = PngImageFile(image_filename)
     metadata = ""
     targetImage.save(image_filename, pnginfo=metadata)
-
 
 def print_pnginfo(image_filename=""):
     targetImage = PngImageFile(image_filename)
@@ -24,7 +22,6 @@ def print_pnginfo(image_filename=""):
     for settings_key in all_settings_list:
         print(settings_key)
         print(json.loads(all_settings_list[settings_key]))
-
 
 def get_instrument_dict():
     # this dictionary is the IDN string as the key and the instrument address as the value
@@ -138,7 +135,6 @@ def insert_instrument_settings(filename="", instrument_dict=[]):
     if (not isimage):
         json.dump(settings_dict, outfile)
 
-
 def restore_instrument_settings(filename="", instrument_dict=[]):
     isimage = False
     if (filename.endswith('PNG') or filename.endswith('png')):
@@ -170,13 +166,11 @@ def restore_instrument_settings(filename="", instrument_dict=[]):
                     for scpi_cmd in unique_scpi:
                         instrument.write(scpi_cmd)
 
-
 def add_to_pnginfo(image_filename="", data_name="", data_dict={}):
     targetImage = PngImageFile(image_filename)
     metadata = PngInfo()
     metadata.add_text(data_name, json.dumps(data_dict))
     targetImage.save(image_filename, pnginfo=metadata)
-
 
 def get_dict_from_pnginfo(image_filename="", dict_name=""):
     dict_to_return = {}
@@ -187,7 +181,6 @@ def get_dict_from_pnginfo(image_filename="", dict_name=""):
             dict_to_return = json.loads(all_settings_dict[settings_key])
     return dict_to_return
 
-
 def get_i2c_values(slave_address=0x40):
     bus = smbus.SMBus(1)
     result_list = []
@@ -195,12 +188,10 @@ def get_i2c_values(slave_address=0x40):
         result_list.append(bus.read_byte_data(slave_address, address))
     return result_list
 
-
 def restore_i2c_values(slave_address=0x40, list_of_values=[]):
     bus = smbus.SMBus(1)
     for address in range(0, 256):
         bus.write_byte_data(slave_address, address, list_of_values[address])
-
 
 instrum_dict = get_instrument_dict()
 print(instrum_dict)
