@@ -48,6 +48,37 @@ def get_instrument_dict():
                 instrument_dict[instrument_idn] = inst
     return instrument_dict
 
+def reset_all_instruments():
+    rm = pyvisa.ResourceManager()
+    for inst in rm.list_resources():
+        try:
+            if (str(inst).startswith('ASRL')): # set the max baud rate for all usb serial ports
+                handle = rm.open_resource(inst, baud_rate=19200)
+            else:
+                handle = rm.open_resource(inst)
+        except:
+            pass
+        else:
+            try:
+                handle.write('*RST')
+            except:
+                pass
+
+def print_settings():
+    rm = pyvisa.ResourceManager()
+    instrument_dict = get_instrument_dict()
+    dict_of_inst_classes = { "HAMEG,HMP4040"                        : hmp4040_power_supply,
+                             "KEITHLEY INSTRUMENTS INC.,MODEL 2308" : keithley_2308,
+                             "KEITHLEY INSTRUMENTS,MODEL 2460"      : keithley_2460,
+                             "TEKTRONIX,AFG3102"                    : tektronics_afg3000,
+                             "KIKUSUI,PLZ164WA,"                    : kikusui_plz4w,
+                             "Agilent Technologies,33250A"          : keysight_33250a}
+    for key in instrument_dict:
+        for inst_idn in dict_of_inst_classes:
+            if (key.startswith(inst_idn)):
+                print(inst_idn)
+                inst_hanle = dict_of_inst_classes[inst_idn](pyvisa_instr=rm.open_resource(instrument_dict[key]))
+                print(inst_hanle.get_unique_scpi_list())
 
 def insert_instrument_settings(filename="", instrument_dict=[]):
     isimage = False
@@ -119,7 +150,7 @@ def restore_instrument_settings(filename="", instrument_dict=[]):
 
     rm = pyvisa.ResourceManager()
     supported_inst_dict = {'k2308_unique_scpi':       "KEITHLEY INSTRUMENTS INC.,MODEL 2308",
-                           'k2460_unique_scpi':       "KEITHLEY INSTRUMENTS INC.,MODEL 2460",
+                           'k2460_unique_scpi':       "KEITHLEY INSTRUMENTS,MODEL 2460",
                            'hmp4040_unique_scpi':     "HAMEG,HMP4040",
                            'tek_afg3000_unique_scpi': "TEKTRONIX,AFG3102",
                            'plz4w_unique_scpi':       "KIKUSUI,PLZ164WA,",
