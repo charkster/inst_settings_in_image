@@ -5,3 +5,5 @@ The idea is to embed all connected instrument settings in an oscilloscope screen
 The end goal is to have a single file, an oscilloscope screen capture, which can be used to restore the oscilloscope and instruments to the configuration that was used at the time the screen capture was made. I also have a generic approach of capturing the DUT state, which would help to restore the DUT to the state where the oscilloscope capture was made. This is not perfect, I can't capture the physical probe or cable connections, but I would be happy with getting 90% the way there.
 
 Instead of an oscilloscope PNG file, a cellphone photo of the bench setup could be used. The photo could show all the wire connections and all the instrument settings can be restored from it.
+
+***The get_instrument_dict() function is standalone and only requires pyvisa. It is the greatest lab instrument script ever written!!***
