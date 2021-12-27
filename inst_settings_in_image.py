@@ -132,6 +132,7 @@ def insert_instrument_settings(filename="", instrument_dict=[]):
                 metadata.add_text("key_33250a_unique_scpi", json.dumps(key_33250a_unique_scpi))
             else:
                 settings_dict['key_33250a_unique_scpi'] = key_33250a_unique_scpi
+        targetImage.save(filename,pnginfo=metadata)
     if (not isimage):
         json.dump(settings_dict, outfile)
 
